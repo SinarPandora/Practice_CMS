@@ -1,0 +1,38 @@
+Configuration:
+  status: INFO
+  name: Log4jConfiguration
+  properties:
+    property:
+      - name: log.path
+        value: /Users/sinar/IdeaProjects/Ark/logs/
+      - name: project.name
+        value: Ark
+  # 配置
+  appenders:
+    Console:
+      name: Console
+      PatternLayout:
+        Pattern: "%d{yy/MM/dd HH:mm:ss} %p %c{2}: %m%n"
+    File:
+      - name: Error
+        fileName: ${log.path}/${project.name}.error.html
+        append: false
+        HTMLLayout:
+          title: error
+        Filters:
+          ThresholdFilter:
+            level: error
+      - name: Info
+        fileName: ${log.path}/${project.name}.info.html
+        append: false
+        HTMLLayout:
+          title: info
+ # 绑定
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+      # 此处为 name
+        - ref: Console
+        - ref: Error
+        - ref: Info

@@ -1,0 +1,61 @@
+include ../include/header
+    div
+        nav.navbar.navbar-inverse
+            .container-fluid
+                .navbar-header
+                    a.navbar-brand(href="#") Brand
+                    span.sr-only 主页
+                .collapse.navbar-collapse
+                    ul.nav.navbar-nav
+                        li
+                            a Link
+                            span.sr-only
+                        li
+                            a Link
+                            span.sr-only
+                        li
+                            a Link
+                            span.sr-only
+                        li.dropdown
+                            a(href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false").dropdown-toggle Dropdown
+                                span.caret
+                            ul.dropdown-menu
+                                li
+                                    a(href="#") action
+                                li
+                                    a(href="#") action2
+                                li.divider(role="separator")
+                                li
+                                    a(href="#") end
+    div.container-fluid
+        .row
+            .col-sm-2.col-md-2.col-lg-2
+                .row
+                    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+                        .row
+                            .list-group.nav-pills
+                                a(href="#" data-toggle="collapse" data-target="#demo").list-group-item @
+                                    span#sol 总览
+                                #demo.collapse.in
+                                    a(href="#").list-group-item 文章管理
+                                    a(href="#").list-group-item 用户管理
+                                    a(href="#").list-group-item.list-group-item-info.active 表单管理
+                                    a(href="#").list-group-item 媒体库管理
+                                    a(href="#").list-group-item.disabled 待完成
+                                    a(href="#").list-group-item.disabled 待完成
+                                    a(href="#").list-group-item.disabled 待完成
+                                    a(href="#").list-group-item.disabled 待完成
+                                    a(href="#").list-group-item.disabled 待完成
+
+            .col-sm-10.col-md-10.col-lg-10
+                .col12
+                case type
+                    when 1: include ./form
+                    default: include ./editor
+
+        script
+            |function col() {
+            |$("a.list-group-item").toggleClass("collapse");
+            |}
+
+include ../include/footer
