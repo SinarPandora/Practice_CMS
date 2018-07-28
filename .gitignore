@@ -69,8 +69,6 @@ gradle-app.setting
 
 
 # Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
 
 # CMakegit rm -r --cached
 cmake-build-debug/
@@ -133,7 +131,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-.idea/vcs.xml
 src/main/app/util/
 src/main/webapp/WEB_INF/views/templates/basic/
 src/main/webapp/WEB_INF/views/templates/dark/

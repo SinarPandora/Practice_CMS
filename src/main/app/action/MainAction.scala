@@ -78,12 +78,14 @@ class MainAction(@Value("${theme.name}") val themeName: String, @Value("${dark.c
     json.put("name", "zhangsan")
     json.put("age", "aha")
     json
+
   }
 
   @RequestMapping(Array("/jq"))
   def jq(): String = {
     "/pages/JQueryTest"
   }
+
 
   @GetMapping(Array("/error"))
   def testError(): Unit = {

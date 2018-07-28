@@ -33,6 +33,6 @@ Configuration:
       level: info
       AppenderRef:
       # 此处为 name
-        - ref: Console
-        - ref: Error
-        - ref: Info
+      - ref: Console
+      - ref: Error
+      - ref: Info

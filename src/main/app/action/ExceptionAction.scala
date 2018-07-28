@@ -17,16 +17,3 @@ class ExceptionAction {
     null
   }
 }
-
-//// TODO 独立的日志进程
-//class LoggerRecorder extends Runnable{
-//  var counter = 0
-//
-//  def logRecorder(): Option[Boolean] = {
-//
-//  }
-//
-//  override def run(): Unit = {
-//    logRecorder()
-//  }
-//}
