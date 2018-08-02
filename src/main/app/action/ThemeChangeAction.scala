@@ -65,7 +65,7 @@ class ThemeChangeAction(@Value("${theme.name}") val currentThemeName: String) {
   def copyFiles(targetThemeName: String): Either[Throwable, Boolean] = {
     val themeFiles = servletContext.getRealPath(s"/config/themes/$targetThemeName/").toFile
     val websiteDir = servletContext.getRealPath("/").toFile
-    val viewsDir = servletContext.getRealPath("/WEB_INF/views").toFile
+    val viewsDir = servletContext.getRealPath("/WEB-INF/views").toFile
     val backupDir = servletContext.getRealPath("/backup").toFile
 
     if (backupDir.exists) {
