@@ -11,6 +11,8 @@ import org.eclipse.collections.impl.factory.Maps
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation._
+import better.files._
+import better.files.File._, Dsl._
 
 @Controller
 @RequestMapping(Array("/app"))
@@ -18,9 +20,6 @@ class ThemeChangeAction(@Value("${theme.name}") val currentThemeName: String) {
 
   @Autowired val servletContext: ServletContext = null
   private val logger = LogManager.getLogger("主题切换")
-  //  private val themeFilePath = servletContext.getRealPath("/webapp/WEB_INF/views/templates")
-  //  private val propertiesFile = servletContext.getRealPath("/config/application.properties")
-
 
   @ResponseBody
   @RequestMapping(value = Array("/getThemeName"))
@@ -28,50 +27,74 @@ class ThemeChangeAction(@Value("${theme.name}") val currentThemeName: String) {
 
   @ResponseBody
   @RequestMapping(value = Array("/switch/{name}"))
-  def compare(@PathVariable("name") themeName: String, req: HttpServletRequest): util.Map[String, Any] = {
+  def compare(@PathVariable("name") targetThemeName: String, req: HttpServletRequest): util.Map[String, Any] = {
     /**
       * JSON
       * state: 1 代表更换成功，-1 代表更换失败
-      * err_message: 如果更换失败就提示错误 xinxi1
+      * err_message: 如果更换失败就提示错误
       */
-    Maps.mutable.of("state", if (switchTheme(themeName)) 1 else -1)
+    val result = switchTheme(targetThemeName)
+    if (result.isRight) {
+      Maps.mutable.of("state", 1)
+    } else {
+      Maps.mutable.of("state", -1, "err_message", result.left.get)
+    }
   }
 
-  def switchTheme(targetThemeName: String): Boolean = {
-    val finishRender = renderTheme(targetThemeName)
+  // 更改主题接口
+  def switchTheme(targetThemeName: String): Either[String, Boolean] = {
+    val finishReplace = copyFiles(targetThemeName)
     val propertiesFile = servletContext.getRealPath("config/application.properties")
     // 判断文件替换操作与渲染操作是否成功
-    if (finishRender.isRight) {
+    if (finishReplace.isRight) {
       // 写入配置文件
       val prop = new Properties()
       prop.load(new FileReader(propertiesFile))
       prop.setProperty("theme.name", targetThemeName)
       prop.store(new FileWriter(propertiesFile), s"Switch theme to $targetThemeName")
       logger.info(s"主题：$targetThemeName 切换成功")
-      true
+      Right(true)
     } else {
-      // TODO 异常处理
-      false
+      logger.error(s"主题：$targetThemeName 切换失败，原因为：${finishReplace.left.get.getMessage}")
+      Left(s"主题：$targetThemeName 切换失败，原因为：${finishReplace.left.get.getMessage}")
     }
   }
 
-  // TODO 修改 资源文件
-  def changeSource(targetThemeName: String): Either[Exception, Boolean] = {
-    Right(true)
-  }
+  // 更改主题逻辑实现
+  def copyFiles(targetThemeName: String): Either[Throwable, Boolean] = {
+    val themeFiles = servletContext.getRealPath(s"/config/themes/$targetThemeName/").toFile
+    val websiteDir = servletContext.getRealPath("/webapp").toFile
+    val viewsDir = servletContext.getRealPath("/webapp/WEB_INF/views").toFile
+    val backupDir = servletContext.getRealPath("/backup").toFile
 
-  // TODO 根据主题内容渲染 Jade 模板
-  def renderTheme(targetThemeName: String): Either[Exception, Boolean] = {
-    val themeFilePath = servletContext.getRealPath("/webapp/WEB_INF/views/templates")
-    val themePropDir = servletContext.getRealPath("/config/themes/")
-    val finishChange = changeSource(targetThemeName)
-    // 检测资源文件是否修改成功如不成功，将错误递交给上一级
-    if (finishChange.isLeft) {
-      logger.error(s"主题：$targetThemeName 切换失败，错误为：${finishChange.left.get.getMessage}")
-      return finishChange
+    // 清空备份文件夹
+    backupDir.clear()
+    // 备份原始文件
+    val packageOldSources = zip(websiteDir/"css", websiteDir/"js", websiteDir/"statics")(destination = backupDir)
+    val packageOldViews = zip(viewsDir)(destination = backupDir)
+
+    try {
+      // 删除旧文件
+      Iterator[File](websiteDir/"css", websiteDir/"js", websiteDir/"statics").foreach(rm)
+      viewsDir.clear()
+      // 移动新文件
+      cp(themeFiles/"toCopy", websiteDir)
+      cp(themeFiles/"toRender", viewsDir)
+      // 返回成功
+      Right(true)
+    } catch {
+      case e:Throwable =>
+        // 遇到错误，首先删除可能移动过的文件
+        Iterator[File](websiteDir/"css", websiteDir/"js", websiteDir/"statics").foreach(rm)
+        viewsDir.clear()
+        // 然后恢复旧文件
+        packageOldSources.unzipTo(websiteDir)
+        packageOldViews.unzipTo(viewsDir)
+        // 返回错误
+        Left(e)
     }
 
-    // 正式的逻辑处理
-    Right(true)
   }
+
+  // TODO 后期可以尝试做检测主题损坏的功能
 }

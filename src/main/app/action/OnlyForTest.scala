@@ -3,6 +3,7 @@ package app.action
 import java.io.{FileOutputStream, FileReader, FileWriter}
 import java.util
 import java.util.Properties
+import better.files._
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.autermann.yaml.{YamlNodeFactory, Yaml => GYaml}
@@ -56,7 +57,7 @@ object OnlyForTest {
   }
 
   def main(args: Array[String]): Unit = {
-    themeChanger()
+
   }
 
   def themeChanger(): Unit = {

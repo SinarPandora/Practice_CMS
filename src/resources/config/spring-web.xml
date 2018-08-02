@@ -34,7 +34,7 @@
             <list>
                 <value>config/jdbc.properties</value>
                 <value>config/application.properties</value>
-                <value>config/themes/theme.*.properties</value>
+                <value>config/themes/themelist.properties</value>
             </list>
         </property>
     </bean>
