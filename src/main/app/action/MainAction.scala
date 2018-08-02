@@ -15,15 +15,13 @@ import org.springframework.web.servlet.ModelAndView
 @RequestMapping(Array("/app"))
 // TODO 成功获取到配置参数了！！！
 // TODO 下一步根据主题内容渲染 HTML 模板
-class MainAction(@Value("${theme.name}") val themeName: String, @Value("${dark.css}") val css: Array[String]) {
+class MainAction {
 
   private val logger = LogManager.getLogger("前端")
 
 
   @RequestMapping(Array("/index"))
   def sayHello(req: HttpServletRequest, resp: HttpServletResponse): String = {
-    println(themeName)
-    css.foreach(println)
     logger.info("-------------------------Success------------------------")
     "/pages/app"
   }

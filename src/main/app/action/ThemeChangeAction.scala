@@ -25,6 +25,7 @@ class ThemeChangeAction(@Value("${theme.name}") val currentThemeName: String) {
   @RequestMapping(value = Array("/getThemeName"))
   def getThemeName: String = currentThemeName
 
+  // 更改主题接口
   @ResponseBody
   @RequestMapping(value = Array("/switch/{name}"))
   def compare(@PathVariable("name") targetThemeName: String, req: HttpServletRequest): util.Map[String, Any] = {
@@ -41,7 +42,7 @@ class ThemeChangeAction(@Value("${theme.name}") val currentThemeName: String) {
     }
   }
 
-  // 更改主题接口
+  // 更改主题逻辑实现
   def switchTheme(targetThemeName: String): Either[String, Boolean] = {
     val finishReplace = copyFiles(targetThemeName)
     val propertiesFile = servletContext.getRealPath("config/application.properties")
@@ -60,32 +61,35 @@ class ThemeChangeAction(@Value("${theme.name}") val currentThemeName: String) {
     }
   }
 
-  // 更改主题逻辑实现
+  // 复制文件
   def copyFiles(targetThemeName: String): Either[Throwable, Boolean] = {
     val themeFiles = servletContext.getRealPath(s"/config/themes/$targetThemeName/").toFile
-    val websiteDir = servletContext.getRealPath("/webapp").toFile
-    val viewsDir = servletContext.getRealPath("/webapp/WEB_INF/views").toFile
+    val websiteDir = servletContext.getRealPath("/").toFile
+    val viewsDir = servletContext.getRealPath("/WEB_INF/views").toFile
     val backupDir = servletContext.getRealPath("/backup").toFile
 
-    // 清空备份文件夹
-    backupDir.clear()
+    if (backupDir.exists) {
+      backupDir.clear()
+    } else {
+      mkdir(backupDir)
+    }
     // 备份原始文件
-    val packageOldSources = zip(websiteDir/"css", websiteDir/"js", websiteDir/"statics")(destination = backupDir)
-    val packageOldViews = zip(viewsDir)(destination = backupDir)
+    val packageOldSources = (backupDir/"Source.zip").zipIn(Array(websiteDir/"css", websiteDir/"js", websiteDir/"statics").filter(_.exists).toIterator)
+    val packageOldViews = zip(viewsDir)(destination = backupDir/"Views.zip")
 
     try {
       // 删除旧文件
-      Iterator[File](websiteDir/"css", websiteDir/"js", websiteDir/"statics").foreach(rm)
+      Array[File](websiteDir/"css", websiteDir/"js", websiteDir/"statics").filter(_.exists).foreach(rm)
       viewsDir.clear()
       // 移动新文件
-      cp(themeFiles/"toCopy", websiteDir)
-      cp(themeFiles/"toRender", viewsDir)
+      (themeFiles/"toCopy").copyTo(websiteDir)
+      (themeFiles/"toRender").copyTo(viewsDir)
       // 返回成功
       Right(true)
     } catch {
       case e:Throwable =>
         // 遇到错误，首先删除可能移动过的文件
-        Iterator[File](websiteDir/"css", websiteDir/"js", websiteDir/"statics").foreach(rm)
+        Array[File](websiteDir/"css", websiteDir/"js", websiteDir/"statics").filter(_.exists).foreach(rm)
         viewsDir.clear()
         // 然后恢复旧文件
         packageOldSources.unzipTo(websiteDir)

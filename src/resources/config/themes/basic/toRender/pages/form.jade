@@ -1,0 +1,44 @@
+.col-sm-12.col-md-12.col-lg-12
+    .row
+        ol.breadcrumb
+            li
+                a(href="#") A类
+            li
+                a(href="#") B类
+            li.active C类
+    .row
+        .col-sm-12.col-md-12.col-lg-7
+            table#forms.table.table-striped.table-bordered.table-hover
+                tr
+                    th.text-center(width="10%") #
+                    th.text-center(width="20%") 名称
+                    th.text-center(width="15%") 状态
+                    th.text-center(width="15%") 提交份数
+                    th.text-center(width="40%") 操作
+                each val in forms
+                    tr
+                        th.text-center= val.id
+                        th.text-center= val.name
+                        if val.isInProgress
+                            th.text-success.text-center 正在使用
+                        else
+                            th.text-center 已到期
+                        th.text-center= val.submits
+                        th
+                            .btn-group.btn-group-justified(role="group")
+                                .btn-group(role="group")
+                                    button.btn.btn-default.btn-block 查看
+                                .btn-group(role="group")
+                                    button.btn.btn-default.btn-block 编辑
+                                .btn-group(role="group")
+                                    button.btn.btn-danger.btn-block 删除
+
+        .col-sm-12.col-md-12.col-lg-5
+            .panel.panel-default
+                .panel-body
+                    p 预览图
+                .panel-footer
+                    p 脚注
+
+
+

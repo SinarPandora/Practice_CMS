@@ -4,6 +4,7 @@ import java.io.{FileOutputStream, FileReader, FileWriter}
 import java.util
 import java.util.Properties
 import better.files._
+import better.files.File._, Dsl._
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.autermann.yaml.{YamlNodeFactory, Yaml => GYaml}
@@ -57,6 +58,9 @@ object OnlyForTest {
   }
 
   def main(args: Array[String]): Unit = {
+    val websiteDir = "/Users/sinar/IdeaProjects/Ark/src/main/webapp".toFile
+    val backupDir = home/"Desktop/"
+    val packageOldSources = zip(websiteDir/"css", websiteDir/"js", websiteDir/"statics")(destination = backupDir/"Source.zip")
 
   }
 
