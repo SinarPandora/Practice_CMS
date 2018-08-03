@@ -59,13 +59,13 @@
     <!--</bean>-->
 
     <bean id="templateLoader" class="de.neuland.jade4j.spring.template.SpringTemplateLoader">
-        <property name="basePath" value="/WEB_INF/views/" />
+        <property name="basePath" value="/WEB-INF/views/" />
     </bean>
 
     <bean id="jadeConfiguration" class="de.neuland.jade4j.JadeConfiguration">
         <property name="caching" value="false" />
         <property name="templateLoader" ref="templateLoader" />
-        <property name="basePath" value="/WEB_INF/views/"/>
+        <property name="basePath" value="/WEB-INF/views/"/>
     </bean>
 
     <bean id="viewResolver" class="de.neuland.jade4j.spring.view.JadeViewResolver">
