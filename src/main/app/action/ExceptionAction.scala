@@ -10,10 +10,9 @@ class ExceptionAction {
 
   private val logger = LogManager.getLogger("错误")
 
-  // TODO 写入日志文件
   @ExceptionHandler(Array(classOf[Exception]))
   def errorHandler(request: HttpServletRequest, e: Exception): ModelAndView = {
-    logger.error(s"发生错误，错误信息：${e.getMessage}")
+    logger.error(s"错误信息：${e.getStackTrace}")
     null
   }
 }

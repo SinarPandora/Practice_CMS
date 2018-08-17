@@ -9,6 +9,8 @@
     <!-- 扫描service包下所有使用注解的类（自动配置） -->
     <context:component-scan base-package="app.service" />
 
+    <bean id="gson" class="com.google.gson.Gson"/>
+
 
 
 </beans>

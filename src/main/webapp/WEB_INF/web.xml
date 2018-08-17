@@ -18,7 +18,7 @@
         <!--默认名：调度服务程序-dispatcherServlet-->
         <servlet-name>dispatcherServlet</servlet-name>
         <!--设置自动捕获后缀名是 action 的请求-->
-        <url-pattern>*.action</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <!--强制切换字符集过滤器-->
     <filter>
@@ -68,7 +68,7 @@
     </filter-mapping>
 
     <welcome-file-list>
-        <welcome-file>app/index.action</welcome-file>
+        <welcome-file>app/index</welcome-file>
     </welcome-file-list>
 
 </web-app>

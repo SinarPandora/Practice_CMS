@@ -13,18 +13,22 @@ import org.springframework.web.servlet.ModelAndView
 
 @Controller
 @RequestMapping(Array("/app"))
-// TODO 成功获取到配置参数了！！！
-// TODO 下一步根据主题内容渲染 HTML 模板
 class MainAction {
 
   private val logger = LogManager.getLogger("前端")
 
+  @RequestMapping(Array("/"))
+  def index(req: HttpServletRequest, resp: HttpServletResponse): String = {
+    logger.info("-------------------------Success------------------------")
+    "/pages/app"
+  }
 
   @RequestMapping(Array("/index"))
   def sayHello(req: HttpServletRequest, resp: HttpServletResponse): String = {
     logger.info("-------------------------Success------------------------")
     "/pages/app"
   }
+
 
   @RequestMapping(Array("/form"))
   def form(): ModelAndView = {

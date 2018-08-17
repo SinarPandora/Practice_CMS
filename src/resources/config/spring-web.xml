@@ -15,7 +15,7 @@
         (1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter
         (2)提供一些列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持
     -->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven/>
 
     <!-- 2.静态资源默认servlet配置
         (1)加入对静态资源的处理：js,gif,png
@@ -23,9 +23,32 @@
      -->
     <mvc:default-servlet-handler/>
 
-    <!--配置自定义过滤器-->
+    <!--配置自定义拦截器-->
     <mvc:interceptors>
-        <bean class="app.interceptor.AuthInterceptor"/>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="app.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/app/resource/**/delete"/>
+            <mvc:mapping path="/app/resource/**/update"/>
+            <mvc:mapping path="/app/resource/**/insert"/>
+            <bean class="app.interceptor.EditorAccessInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/app/user/**/delete"/>
+            <mvc:mapping path="/app/user/**/update"/>
+            <mvc:mapping path="/app/user/**/insert"/>
+            <bean class="app.interceptor.AdminAccessInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/delete"/>
+            <mvc:mapping path="/**/update"/>
+            <mvc:mapping path="/**/insert"/>
+            <bean class="app.interceptor.PermissionFakeInterceptor"/>
+        </mvc:interceptor>
+
     </mvc:interceptors>
 
     <bean id="propertyConfigurer"
@@ -49,42 +72,41 @@
     </bean>
 
 
-
     <!-- 3.配置jsp 为视图解释器（还可以使用其他引擎） -->
     <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
-        <!--&lt;!&ndash;文件位置&ndash;&gt;-->
-        <!--<property name="prefix" value="/WEB_INF/views/" />-->
-        <!--&lt;!&ndash;后缀名&ndash;&gt;-->
-        <!--<property name="suffix" value=".jsp" />-->
+    <!--&lt;!&ndash;文件位置&ndash;&gt;-->
+    <!--<property name="prefix" value="/WEB_INF/views/" />-->
+    <!--&lt;!&ndash;后缀名&ndash;&gt;-->
+    <!--<property name="suffix" value=".jsp" />-->
     <!--</bean>-->
 
     <bean id="templateLoader" class="de.neuland.jade4j.spring.template.SpringTemplateLoader">
-        <property name="basePath" value="/WEB-INF/views/" />
+        <property name="basePath" value="/WEB-INF/views/"/>
     </bean>
 
     <bean id="jadeConfiguration" class="de.neuland.jade4j.JadeConfiguration">
-        <property name="caching" value="false" />
-        <property name="templateLoader" ref="templateLoader" />
+        <property name="caching" value="false"/>
+        <property name="templateLoader" ref="templateLoader"/>
         <property name="basePath" value="/WEB-INF/views/"/>
     </bean>
 
     <bean id="viewResolver" class="de.neuland.jade4j.spring.view.JadeViewResolver">
-        <property name="configuration" ref="jadeConfiguration" />
+        <property name="configuration" ref="jadeConfiguration"/>
         <!-- rendering nice html formatted error pages for development -->
         <property name="suffix" value=".jade"/>
     </bean>
 
     <!-- 4.扫描web相关的bean -->
-    <context:component-scan base-package="app.action" />
+    <context:component-scan base-package="app.action"/>
 
     <!-- 配置上传文件解析器 -->
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- 可上传文件的最大大小设置（单位：字节），默认为-1（无穷大） -->
         <!-- 此处设置为200M -->
-        <property name="maxUploadSize" value="209715200" />
+        <property name="maxUploadSize" value="209715200"/>
         <!-- 大小低于该值的文件会被存储在内存中 -->
-        <property name="maxInMemorySize" value="0" />
+        <property name="maxInMemorySize" value="0"/>
         <!--默认文本编码-->
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD
+ Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.dao.UserTableDao">
+
+    <!--
+    * 通过电话号码查询用户
+    *
+    * @param tel 电话号码
+    * @return 查找到的用户
+    -->
+    <select id="getUserByPhoneNumber" parameterType="String" resultType="User">
+        select *
+        from user
+        where telphone = #{tel}
+    </select>
+
+    <!--
+    * 通过用户名查找用户
+    *
+    * @param name 用户名
+    * @return 查找到的用户
+    -->
+    <select id="getUserByName" parameterType="String" resultType="User">
+        select *
+        from user
+        where name = #{name}
+    </select>
+
+    <!--
+    * 通过 ID 查找用户
+    *
+    * @param id  用户唯一 ID
+    * @return 查找到的用户
+    -->
+    <select id="getUserByName" parameterType="Long" resultType="User">
+        select *
+        from user
+        where id = #{id}
+    </select>
+
+    <!--
+    * 向用户表添加条目
+    *
+    * @param user 条目信息
+    * @return 1 添加成功
+    *         0 添加失败
+    -->
+    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        insert into user (name, password, job, department, entry_time, permission, note, gender, telphone, reg_date)
+        values (#{name},
+                #{password},
+                #{job},
+                #{department},
+                #{entry_time},
+                #{permission},
+                #{note},
+                #{gender},
+                #{telphone},
+                #{reg_date})
+    </insert>
+
+    <!--
+    * 修改用户表中对应用户条目
+    *
+    * @param user 条目信息
+    * @return 1 修改成功
+    *         0 修改失败
+    -->
+    <update id="updateUser" parameterType="User">
+        update user
+        set name       = #{name},
+            password   = #{password},
+            job        = #{job},
+            department = #{department},
+            entry_time = #{entry_time},
+            permission = #{permission},
+            note       = #{note},
+            gender     = #{gender},
+            telphone   = #{telphone}
+        where id = #{id}
+    </update>
+
+    <!--
+    * 删除用户表中指定用户
+    *
+    * @param user 条目信息
+    * @return 1 删除成功
+    *         0 删除失败
+    -->
+    <delete id="deleteUser" parameterType="User">
+        delete
+        from user
+        where id = #{id}
+    </delete>
+
+</mapper>
