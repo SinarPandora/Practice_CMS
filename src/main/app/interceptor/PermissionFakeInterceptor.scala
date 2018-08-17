@@ -28,8 +28,4 @@ class PermissionFakeInterceptor(@Autowired val fromUserTable: UserTableDao) exte
     val isPermissionConsistent = permissionInSession == permissionInTable
     isPermissionConsistent
   }
-
-  override def postHandle(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any, modelAndView: ModelAndView): Unit = super.postHandle(request, response, handler, modelAndView)
-
-  override def afterCompletion(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any, ex: Exception): Unit = super.afterCompletion(request, response, handler, ex)
 }

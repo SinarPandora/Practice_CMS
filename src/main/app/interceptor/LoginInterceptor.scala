@@ -21,12 +21,8 @@ class LoginInterceptor extends HandlerInterceptor {
   }
 
   // 服务器 => 客户端
-  override def postHandle(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any, modelAndView: ModelAndView): Unit = {
-
-  }
+  // override def postHandle(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any, modelAndView: ModelAndView): Unit = {}
 
   // 后处理
-  override def afterCompletion(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any, ex: Exception): Unit = {
-
-  }
+  // override def afterCompletion(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any, ex: Exception): Unit = {}
 }

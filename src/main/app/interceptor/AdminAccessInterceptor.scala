@@ -9,9 +9,10 @@ import org.springframework.web.servlet.{HandlerInterceptor, ModelAndView}
   */
 @Component
 class AdminAccessInterceptor extends HandlerInterceptor {
-  override def preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any): Boolean = super.preHandle(request, response, handler)
-
-  override def postHandle(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any, modelAndView: ModelAndView): Unit = super.postHandle(request, response, handler, modelAndView)
-
-  override def afterCompletion(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any, ex: Exception): Unit = super.afterCompletion(request, response, handler, ex)
+  override def preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any): Boolean = {
+    val session = request.getSession
+    val permission = session.getAttribute("user_permission").asInstanceOf[Int]
+    val isAllowed = permission >= 2
+    isAllowed
+  }
 }
