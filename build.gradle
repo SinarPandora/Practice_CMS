@@ -48,14 +48,15 @@ dependencies {
     testRuntime 'org.scala-lang.modules:scala-xml_2.11:1.1.0'
 
     // Spring 相关
-    compile group: 'org.springframework', name: 'spring-context', version: "$spring_version"
-    compile group: 'org.springframework', name: 'spring-core', version: "$spring_version"
-    compile group: 'org.springframework', name: 'spring-beans', version: "$spring_version"
     compile group: 'org.springframework', name: 'spring-web', version: "$spring_version"
-    compile group: 'org.springframework', name: 'spring-webmvc', version: "$spring_version"
     compile group: 'org.springframework', name: 'spring-aop', version: "$spring_version"
+    compile group: 'org.springframework', name: 'spring-core', version: "$spring_version"
     compile group: 'org.springframework', name: 'spring-jdbc', version: "$spring_version"
+    compile group: 'org.springframework', name: 'spring-beans', version: "$spring_version"
+    compile group: 'org.springframework', name: 'spring-webmvc', version: "$spring_version"
     compile group: 'org.springframework', name: 'spring-webflux', version: "$spring_version"
+    compile group: 'org.springframework', name: 'spring-context', version: "$spring_version"
+    compile group: 'org.springframework', name: 'spring-context-support', version: "$spring_version"
     compile group: 'org.springframework.security', name: 'spring-security-core', version: '4.2.7.RELEASE'
     testCompile group: 'org.springframework', name: 'spring-test', version: "$spring_version"
 

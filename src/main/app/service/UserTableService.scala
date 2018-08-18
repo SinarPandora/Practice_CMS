@@ -22,10 +22,10 @@ class UserTableService(@Autowired fromUserTable: UserTableDao) {
     * @param name              用户名或电话号码（默认用户名）
     * @param password          密码
     * @param isTelephoneNumber 输入的登录凭证是否为电话号码
-    * @return 验证通过 => 成功登录的用户信息
-    *         验证失败 => None
+    * @return 通过：右值：返回成功登录的用户信息
+    *         失败：左值：返回 None
     */
-  def ifCanLogin(name: String, password: String, isTelephoneNumber: Boolean): Option[User] = {
+  def checkUserExistAndPasswordCorrect(name: String, password: String, isTelephoneNumber: Boolean): Option[User] = {
     val result =
       if (isTelephoneNumber) {
         fromUserTable.getUserByPhoneNumber(name)
@@ -47,25 +47,74 @@ class UserTableService(@Autowired fromUserTable: UserTableDao) {
     * 根据给定的信息修改指定用户
     *
     * @param user 要修改的用户信息
-    * @return 成功：返回修改的内容（以字符串形式）
-    *         失败：返回错误信息字符串
+    * @return 成功：右值：返回修改的内容（以字符串形式）
+    *         失败：左值：返回错误信息字符串
     */
-  def ifUpdateSuccess(user: User): Either[String, String] = {
+  def updateUserInTable(user: User): Either[String, String] = {
     val originUser = fromUserTable.getUserByID(user.id)
-    if (originUser.isDefined) {
-      val isSuccess = fromUserTable.updateUser(user) == 1
-      if (isSuccess) {
-        val diff = User.diff(user, originUser.get)
-        Right(diff)
-      } else {
-        Left("修改失败，请检查数据库是否正常")
-      }
+
+    val userNotExist = originUser.isEmpty
+    if (userNotExist) {
+      return Left("修改失败，指定用户不存在")
+    }
+
+    val isSuccess = fromUserTable.updateUser(user) == 1
+    if (isSuccess) {
+      val diff = User.diff(user, originUser.get)
+      Right(diff)
     } else {
-      Left("查询失败，可能不存在需要修改的用户")
+      Left("修改失败，重试，若继续失败，请检查数据库是否正常")
+    }
+
+  }
+
+  /**
+    * 根据给定信息添加用户
+    *
+    * @param user 要添加的用户
+    * @return 成功：右值：返回添加的用户在表中的 id
+    *         失败：左值：返回错误信息字符串
+    */
+  def insertUserIntoTable(user: User): Either[String, Long] = {
+    val userNameAlreadyExist = fromUserTable.getUserByName(user.name).isDefined
+    if (userNameAlreadyExist) return Left("添加失败，同名用户已存在")
+
+    val userTelAlreadyExist = fromUserTable.getUserByPhoneNumber(user.telephone).isDefined
+    if (userTelAlreadyExist) return Left("添加失败，同电话号码用户已存在")
+
+    val isSuccess = fromUserTable.insertUser(user) == 1
+    if (isSuccess) {
+      val id = fromUserTable.getUserByName(user.name).get.id
+      Right(id)
+    } else {
+      Left("添加失败，请重试，若继续失败，请检查数据库是否正常")
     }
   }
 
 
+  /**
+    * 根据给定 ID 删除用户
+    *
+    * @param id 将删除用户的 ID
+    * @return 成功：右值：返回删除用户的用户名
+    *         失败：左值：返回错误信息字符串
+    */
+  def deleteUserInTable(id: Long): Either[String, String] = {
+    val userToDelete = fromUserTable.getUserByID(id)
 
+    val userNotExist = userToDelete.isEmpty
+    if (userNotExist) {
+      return Left("删除失败，指定用户不存在")
+    }
+
+    val isSuccess = fromUserTable.deleteUserByID(id) == 1
+    if (isSuccess) {
+      Right(userToDelete.get.name)
+    } else {
+      Left("删除失败，请重试，若继续失败，请检查数据库是否正常")
+    }
+
+
+  }
 
 }

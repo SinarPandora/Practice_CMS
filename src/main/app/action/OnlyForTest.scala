@@ -3,13 +3,17 @@ package app.action
 import java.io.{FileOutputStream, FileReader, FileWriter}
 import java.util
 import java.util.Properties
-import better.files._
-import better.files.File._, Dsl._
+import java.util.concurrent.TimeUnit
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.autermann.yaml.{YamlNodeFactory, Yaml => GYaml}
+import io.reactivex.{Observable, Single}
+import monix.eval.Task
 import org.yaml.snakeyaml.Yaml
+import monix.execution.Scheduler.Implicits.global
 
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import scala.beans.BeanProperty
 
 
@@ -57,11 +61,23 @@ object OnlyForTest {
     }
   }
 
-  def main(args: Array[String]): Unit = {
-    val websiteDir = "/Users/sinar/IdeaProjects/Ark/src/main/webapp".toFile
-    val backupDir = home/"Desktop/"
-    val packageOldSources = zip(websiteDir/"css", websiteDir/"js", websiteDir/"statics")(destination = backupDir/"Source.zip")
+  class A(val name: String, val id: Int, val note: String)
 
+  def main(args: Array[String]): Unit = {
+    val a: Int = null.asInstanceOf[Int]
+    println(a)
+  }
+
+  def towKindOfRx(): Unit = {
+    // 'Rx' scala
+    val task = Task(1 + 1)
+    val future = task.runAsync
+    println(Await.result(future, 5.seconds))
+
+    // RxJava
+    val task2 = Single.just(1 + 1)
+    val future2 = task2.toFuture
+    println(future2.get(5, TimeUnit.MINUTES))
   }
 
   def themeChanger(): Unit = {

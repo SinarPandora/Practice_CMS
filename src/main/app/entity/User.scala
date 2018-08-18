@@ -22,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCrypt
   * @param note       备注
   */
 class User(
-            val id: Long,
             var name: String,
             var password: String,
             var job: Int,
@@ -33,6 +32,7 @@ class User(
             var telephone: String,
             val reg_date: Timestamp,
             var note: String,
+            val id: Long = 0,
             implicit val userTableDao: UserTableDao = null
           ) extends Serializable {
 

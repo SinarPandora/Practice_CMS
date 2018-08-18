@@ -41,7 +41,7 @@ abstract class UserTableDao {
     * @return 1 添加成功
     *         0 添加失败
     */
-  def addUser(user: User): Int
+  def insertUser(user: User): Int
 
   /**
     * 修改用户表中对应用户条目
@@ -53,13 +53,13 @@ abstract class UserTableDao {
   def updateUser(user: User): Int
 
   /**
-    * 删除用户表中指定用户
+    * 删除用户表中指定 ID 的用户
     *
-    * @param user 条目信息
+    * @param id 指定 ID
     * @return 1 删除成功
     *         0 删除失败
     */
-  def deleteUser(user: User): Int
+  def deleteUserByID(id: Long): Int
 
   /*TODO 添加用户相关表的检索*/
 }

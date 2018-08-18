@@ -68,7 +68,7 @@
     </filter-mapping>
 
     <welcome-file-list>
-        <welcome-file>app/index</welcome-file>
+        <welcome-file>app/login</welcome-file>
     </welcome-file-list>
 
 </web-app>

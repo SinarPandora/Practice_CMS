@@ -1,4 +1,4 @@
-include ../include/header
+include ./include/header
     div
         nav.navbar.navbar-inverse
             .container-fluid
@@ -49,13 +49,14 @@ include ../include/header
 
             .col-sm-10.col-md-10.col-lg-10
                 .col12
-                case type
-                    when 1: include ./form
-                    default: include ./editor
+                case panel
+                    when "form": include ./panels/form
+                    when "user": include ./panels/user
+                    default: include ./components/editor
 
-        script
-            |function col() {
-            |$("a.list-group-item").toggleClass("collapse");
-            |}
+        script.
+            function col() {
+                $("a.list-group-item").toggleClass("collapse");
+            }
 
-include ../include/footer
+include ./include/footer

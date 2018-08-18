@@ -47,7 +47,7 @@
     * @return 1 添加成功
     *         0 添加失败
     -->
-    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
         insert into user (name, password, job, department, entry_time, permission, note, gender, telphone, reg_date)
         values (#{name},
                 #{password},
@@ -83,13 +83,13 @@
     </update>
 
     <!--
-    * 删除用户表中指定用户
+    * 删除用户表中指定 ID 的用户
     *
-    * @param user 条目信息
+    * @param id 指定 ID
     * @return 1 删除成功
     *         0 删除失败
     -->
-    <delete id="deleteUser" parameterType="User">
+    <delete id="deleteUserByID" parameterType="Long">
         delete
         from user
         where id = #{id}

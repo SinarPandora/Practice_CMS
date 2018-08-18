@@ -26,26 +26,21 @@
     <!--配置自定义拦截器-->
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/**"/>
+            <mvc:mapping path="/app/resource/**"/>
+            <mvc:mapping path="/app/user/**"/>
             <bean class="app.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
 
         <mvc:interceptor>
-            <mvc:mapping path="/app/resource/**/delete"/>
-            <mvc:mapping path="/app/resource/**/update"/>
-            <mvc:mapping path="/app/resource/**/insert"/>
+            <mvc:mapping path="/app/resource/**"/>
             <bean class="app.interceptor.EditorAccessInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
-            <mvc:mapping path="/app/user/**/delete"/>
-            <mvc:mapping path="/app/user/**/update"/>
-            <mvc:mapping path="/app/user/**/insert"/>
+            <mvc:mapping path="/app/user/**"/>
             <bean class="app.interceptor.AdminAccessInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
-            <mvc:mapping path="/**/delete"/>
-            <mvc:mapping path="/**/update"/>
-            <mvc:mapping path="/**/insert"/>
+            <mvc:mapping path="/app/**"/>
             <bean class="app.interceptor.PermissionFakeInterceptor"/>
         </mvc:interceptor>
 
@@ -72,13 +67,7 @@
     </bean>
 
 
-    <!-- 3.配置jsp 为视图解释器（还可以使用其他引擎） -->
-    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
-    <!--&lt;!&ndash;文件位置&ndash;&gt;-->
-    <!--<property name="prefix" value="/WEB_INF/views/" />-->
-    <!--&lt;!&ndash;后缀名&ndash;&gt;-->
-    <!--<property name="suffix" value=".jsp" />-->
-    <!--</bean>-->
+    <!--配置视图-->
 
     <bean id="templateLoader" class="de.neuland.jade4j.spring.template.SpringTemplateLoader">
         <property name="basePath" value="/WEB-INF/views/"/>
